@@ -184,7 +184,7 @@
     supervisorctl_path={{ supervisor_ctl }}
     config={{ supervisor_cfg }}
     state=restarted
-  when: celery_worker is not defined
+  when: celery_worker is not defined and not edxapp_skip_supervisor
   with_items: service_variants_enabled
   sudo_user: "{{ common_web_user }}"
   tags:
@@ -196,7 +196,7 @@
     supervisorctl_path={{ supervisor_ctl }}
     config={{ supervisor_cfg }}
     state=restarted
-  when: celery_worker is defined
+  when: celery_worker is defined and not edxapp_skip_supervisor
   with_items: edxapp_workers
   sudo_user: "{{ common_web_user }}"
   tags:

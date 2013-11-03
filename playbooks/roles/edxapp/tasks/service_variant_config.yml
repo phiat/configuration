@@ -24,7 +24,7 @@
     src={{ item }}.conf.j2 dest={{ supervisor_cfg_dir }}/{{ item }}.conf
     owner={{ supervisor_user }}
   with_items: service_variants_enabled
-  when: celery_worker is not defined
+  when: celery_worker is not defined and not edxapp_skip_supervisor
   notify: supervisor | reload supervisor
   sudo_user: "{{ supervisor_user }}"
   tags:
@@ -34,7 +34,7 @@
   template: >
     src=edxapp.conf.j2 dest={{ supervisor_cfg_dir }}/edxapp.conf
     owner={{ supervisor_user }}
-  when: celery_worker is not defined
+  when: celery_worker is not defined and not edxapp_skip_supervisor
   notify: supervisor | reload supervisor
   sudo_user: "{{ supervisor_user }}"
   tags:
@@ -46,7 +46,7 @@
     supervisorctl_path={{ supervisor_ctl }}
     config={{ supervisor_cfg }}
     state=present
-  when: celery_worker is not defined
+  when: celery_worker is not defined and not edxapp_skip_supervisor
   tags:
     - deploy
 
@@ -56,7 +56,7 @@
   template: >
     src=workers.conf.j2 dest={{ supervisor_cfg_dir }}/workers.conf
     owner={{ supervisor_user }}
-  when: celery_worker is defined
+  when: celery_worker is defined and not edxapp_skip_supervisor
   notify: supervisor | reload supervisor
   sudo_user: "{{ supervisor_user }}"
   tags:
@@ -68,7 +68,7 @@
     supervisorctl_path={{ supervisor_ctl }}
     config={{ supervisor_cfg }}
     state=present
-  when: celery_worker is defined
+  when: celery_worker is defined and not edxapp_skip_supervisor
   tags:
     - deploy
 
